@@ -437,13 +437,49 @@
         color: var(--muted);
       }
 
+      .insight-box {
+        display: grid;
+        gap: 6px;
+        margin: 0 0 16px;
+        padding: 12px;
+        border: 1px solid rgba(24, 116, 91, 0.18);
+        border-radius: 8px;
+        background: rgba(24, 116, 91, 0.06);
+      }
+
+      .insight-label {
+        color: var(--green-deep);
+        font-size: 0.8rem;
+        font-weight: 800;
+      }
+
+      .insight-box strong {
+        color: var(--text);
+        font-size: 1rem;
+      }
+
+      .insight-box p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
       .point-list,
-      .article-list {
+      .article-list,
+      .selected-list {
         display: grid;
         gap: 8px;
-        margin: 0;
         padding: 0;
         list-style: none;
+      }
+
+      .point-list,
+      .article-list {
+        margin: 0;
+      }
+
+      .point-list {
+        margin-bottom: 16px;
       }
 
       .point-list li,
@@ -464,6 +500,36 @@
         background: var(--coral);
       }
 
+      .selected-list {
+        margin: 0 0 16px;
+      }
+
+      .selected-list li {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 9px;
+        align-items: start;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfcfd;
+        color: var(--text);
+        font-size: 0.92rem;
+        line-height: 1.55;
+      }
+
+      .type-chip {
+        display: inline-grid;
+        place-items: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        color: #fff;
+        background: var(--green);
+        font-size: 0.78rem;
+        font-weight: 800;
+      }
+
       .article-list a {
         color: var(--blue);
         font-weight: 800;
@@ -475,21 +541,32 @@
         display: grid;
         gap: 8px;
         margin: 16px 0 0;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfcfd;
+      }
+
+      .scores-title {
+        margin: 0 0 2px;
+        color: var(--text);
+        font-size: 0.92rem;
+        font-weight: 800;
       }
 
       .score-row {
         display: grid;
-        grid-template-columns: 7.5rem minmax(0, 1fr) 2rem;
+        grid-template-columns: 7.5rem minmax(0, 1fr) auto;
         gap: 8px;
         align-items: center;
         color: var(--muted);
-        font-size: 0.9rem;
+        font-size: 0.84rem;
       }
 
       .score-track {
-        height: 8px;
+        height: 6px;
         border-radius: 999px;
-        background: #e8ebef;
+        background: #edf0f3;
         overflow: hidden;
       }
 
@@ -497,7 +574,7 @@
         height: 100%;
         width: 0%;
         border-radius: inherit;
-        background: var(--green);
+        background: rgba(24, 116, 91, 0.76);
       }
 
       .cta {
@@ -669,12 +746,12 @@
       <section class="result" id="result" aria-live="polite" aria-labelledby="resultTitle">
         <div class="result-head">
           <div>
-            <p class="result-label">あなたは</p>
-            <h2 class="result-title" id="resultTitle">〇〇タイプ傾向です</h2>
+            <p class="result-label">今いちばん近い反応</p>
+            <h2 class="result-title" id="resultTitle">〇〇タイプ傾向</h2>
           </div>
           <div class="result-score">
-            <strong id="topScore">0</strong>
-            <span>最高スコア</span>
+            <strong id="topScore">0/4</strong>
+            <span>一致項目</span>
           </div>
         </div>
         <div class="result-body">
@@ -682,10 +759,19 @@
             <h3 class="section-title">タイプ説明</h3>
             <p class="result-text" id="resultDescription"></p>
 
+            <div class="insight-box" id="strengthBox">
+              <span class="insight-label">傾向の強さ</span>
+              <strong id="strengthTitle"></strong>
+              <p id="strengthText"></p>
+            </div>
+
             <h3 class="section-title">まず見るところ</h3>
             <ul class="point-list" id="focusList"></ul>
 
-            <div class="scores" id="scoreRows" aria-label="タイプ別スコア"></div>
+            <h3 class="section-title">選んだ項目</h3>
+            <ul class="selected-list" id="selectedItems"></ul>
+
+            <div class="scores" id="scoreRows" aria-label="タイプ別チェック数"></div>
           </div>
           <aside class="result-side">
             <h3 class="section-title">おすすめ記事</h3>
@@ -789,8 +875,8 @@
 
       const typeLabels = {
         A: "A：足しすぎ",
-        B: "B：張り・ガス",
-        C: "C：スッキリしない",
+        B: "B：張りガス",
+        C: "C：残る感じ",
         D: "D：食後反応"
       };
 
@@ -820,7 +906,7 @@
             const id = `check-${index}`;
             return `
               <label class="option" for="${id}">
-                <input id="${id}" type="checkbox" name="checkItem" value="${item.type}">
+                <input id="${id}" type="checkbox" name="checkItem" value="${item.type}" data-index="${index}">
                 <span>${item.label}</span>
               </label>
             `;
@@ -838,8 +924,12 @@
       }
 
       function getAnswers() {
+        return getSelectedItems().map((item) => item.type);
+      }
+
+      function getSelectedItems() {
         return Array.from(quizForm.querySelectorAll('input[name="checkItem"]:checked')).map(
-          (input) => input.value
+          (input) => checklistItems[Number(input.dataset.index)]
         );
       }
 
@@ -874,23 +964,61 @@
         return typeOrder.filter((type) => scores[type] === maxScore);
       }
 
-      function renderResult(scores) {
+      function getStrengthMessage(maxScore, topTypes) {
+        if (topTypes.length > 1) {
+          return {
+            title: "複数タイプが近い状態です",
+            text: "同点のタイプがあります。点数だけで決めず、選んだ項目の中で生活に影響が大きいものから見てください。"
+          };
+        }
+
+        if (maxScore >= 3) {
+          return {
+            title: "傾向は強めです",
+            text: "同じタイプの項目が複数重なっています。まずはこのタイプの見直しから始めると整理しやすいです。"
+          };
+        }
+
+        if (maxScore === 2) {
+          return {
+            title: "傾向はややあります",
+            text: "同じタイプの項目が2つ重なっています。まずは数日だけ、関連する体感を観察してみてください。"
+          };
+        }
+
+        return {
+          title: "傾向はまだ弱めです",
+          text: "今回は1項目のみなので、タイプを決めつけず、その反応が続くかをまず確認してみてください。"
+        };
+      }
+
+      function renderResult(scores, selectedItems) {
         const topTypes = findTopTypes(scores);
         const topType = findTopType(scores);
         const content = resultContent[topType];
         const maxScore = scores[topType];
         const titleNames = topTypes.map((type) => resultContent[type].name).join("・");
-        const tieNote =
-          topTypes.length > 1
-            ? " 同じ点数のタイプもあるため、まずは強く心当たりがある項目から見てください。"
-            : "";
+        const strengthMessage = getStrengthMessage(maxScore, topTypes);
 
-        document.querySelector("#resultTitle").textContent = `${titleNames}傾向です`;
-        document.querySelector("#topScore").textContent = maxScore;
-        document.querySelector("#resultDescription").textContent = content.description + tieNote;
+        document.querySelector("#resultTitle").textContent = `${titleNames}傾向`;
+        document.querySelector("#topScore").textContent = `${maxScore}/${typeMaxScores[topType]}`;
+        document.querySelector("#resultDescription").textContent = content.description;
+        document.querySelector("#strengthTitle").textContent = strengthMessage.title;
+        document.querySelector("#strengthText").textContent = strengthMessage.text;
 
         document.querySelector("#focusList").innerHTML = content.focus
           .map((item) => `<li>${item}</li>`)
+          .join("");
+
+        document.querySelector("#selectedItems").innerHTML = selectedItems
+          .map(
+            (item) => `
+              <li>
+                <span class="type-chip">${item.type}</span>
+                <span>${item.label}</span>
+              </li>
+            `
+          )
           .join("");
 
         document.querySelector("#articleList").innerHTML = content.articles
@@ -902,20 +1030,23 @@
           })
           .join("");
 
-        document.querySelector("#scoreRows").innerHTML = Object.entries(scores)
-          .map(([type, score]) => {
-            const width = `${(score / typeMaxScores[type]) * 100}%`;
-            return `
-              <div class="score-row">
-                <span>${typeLabels[type]}</span>
-                <span class="score-track" aria-hidden="true">
-                  <span class="score-fill" style="width: ${width}"></span>
-                </span>
-                <strong>${score}</strong>
-              </div>
-            `;
-          })
-          .join("");
+        document.querySelector("#scoreRows").innerHTML = `
+          <h3 class="scores-title">タイプ別チェック数</h3>
+          ${Object.entries(scores)
+            .map(([type, score]) => {
+              const width = `${(score / typeMaxScores[type]) * 100}%`;
+              return `
+                <div class="score-row">
+                  <span>${typeLabels[type]}</span>
+                  <span class="score-track" aria-hidden="true">
+                    <span class="score-fill" style="width: ${width}"></span>
+                  </span>
+                  <strong>${score}/${typeMaxScores[type]}</strong>
+                </div>
+              `;
+            })
+            .join("")}
+        `;
 
         resultEl.classList.add("is-visible");
         resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -925,16 +1056,16 @@
 
       quizForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        const answers = getAnswers();
+        const selectedItems = getSelectedItems();
 
-        if (answers.length === 0) {
+        if (selectedItems.length === 0) {
           errorText.classList.add("is-visible");
           quizForm.querySelector('input[name="checkItem"]').focus();
           return;
         }
 
         errorText.classList.remove("is-visible");
-        renderResult(calculateScores(answers));
+        renderResult(calculateScores(selectedItems.map((item) => item.type)), selectedItems);
       });
 
       resetButton.addEventListener("click", () => {
