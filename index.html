@@ -505,10 +505,7 @@
       }
 
       .selected-list li {
-        display: grid;
-        grid-template-columns: 28px minmax(0, 1fr);
-        gap: 9px;
-        align-items: start;
+        position: relative;
         padding: 10px 12px;
         border: 1px solid var(--line);
         border-radius: 8px;
@@ -518,18 +515,6 @@
         line-height: 1.55;
       }
 
-      .type-chip {
-        display: inline-grid;
-        place-items: center;
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        color: #fff;
-        background: var(--green);
-        font-size: 0.78rem;
-        font-weight: 800;
-      }
-
       .article-list a {
         color: var(--blue);
         font-weight: 800;
@@ -537,44 +522,21 @@
         text-underline-offset: 3px;
       }
 
-      .scores {
+      .reason-box {
         display: grid;
-        gap: 8px;
-        margin: 16px 0 0;
+        gap: 6px;
+        margin: 0 0 16px;
         padding: 12px;
         border: 1px solid var(--line);
         border-radius: 8px;
         background: #fbfcfd;
       }
 
-      .scores-title {
-        margin: 0 0 2px;
+      .reason-box p {
+        margin: 0;
         color: var(--text);
         font-size: 0.92rem;
-        font-weight: 800;
-      }
-
-      .score-row {
-        display: grid;
-        grid-template-columns: 7.5rem minmax(0, 1fr) auto;
-        gap: 8px;
-        align-items: center;
-        color: var(--muted);
-        font-size: 0.84rem;
-      }
-
-      .score-track {
-        height: 6px;
-        border-radius: 999px;
-        background: #edf0f3;
-        overflow: hidden;
-      }
-
-      .score-fill {
-        height: 100%;
-        width: 0%;
-        border-radius: inherit;
-        background: rgba(24, 116, 91, 0.76);
+        line-height: 1.65;
       }
 
       .cta {
@@ -637,9 +599,6 @@
           border-left: 0;
         }
 
-        .score-row {
-          grid-template-columns: 6.4rem minmax(0, 1fr) 1.8rem;
-        }
       }
 
       @media (max-width: 460px) {
@@ -705,19 +664,19 @@
 
       <section class="intro-grid" aria-label="診断タイプ一覧">
         <div class="type-pill">
-          <strong>A：足しすぎタイプ</strong>
+          <strong>足しすぎタイプ</strong>
           <span>よいものを足しているのに、体感が重くなりやすい傾向。</span>
         </div>
         <div class="type-pill">
-          <strong>B：張り・ガスタイプ</strong>
+          <strong>張り・ガスタイプ</strong>
           <span>発酵食品や食物繊維で、お腹の張りが気になりやすい傾向。</span>
         </div>
         <div class="type-pill">
-          <strong>C：便は出るけどスッキリしないタイプ</strong>
+          <strong>便は出るけどスッキリしないタイプ</strong>
           <span>回数はあっても、残る感じやリズムの乱れが出やすい傾向。</span>
         </div>
         <div class="type-pill">
-          <strong>D：食後反応タイプ</strong>
+          <strong>食後反応タイプ</strong>
           <span>食後の眠気、だるさ、胃腸の重さに反応が出やすい傾向。</span>
         </div>
       </section>
@@ -750,8 +709,8 @@
             <h2 class="result-title" id="resultTitle">〇〇タイプ傾向</h2>
           </div>
           <div class="result-score">
-            <strong id="topScore">0/4</strong>
-            <span>一致項目</span>
+            <strong id="topScore">弱め</strong>
+            <span>傾向</span>
           </div>
         </div>
         <div class="result-body">
@@ -765,13 +724,16 @@
               <p id="strengthText"></p>
             </div>
 
+            <div class="reason-box" id="reasonBox">
+              <span class="insight-label">今回の見立て</span>
+              <p id="reasonText"></p>
+            </div>
+
             <h3 class="section-title">まず見るところ</h3>
             <ul class="point-list" id="focusList"></ul>
 
-            <h3 class="section-title">選んだ項目</h3>
+            <h3 class="section-title">チェックした内容</h3>
             <ul class="selected-list" id="selectedItems"></ul>
-
-            <div class="scores" id="scoreRows" aria-label="タイプ別チェック数"></div>
           </div>
           <aside class="result-side">
             <h3 class="section-title">おすすめ記事</h3>
@@ -796,21 +758,21 @@
       const instagramUrl = "https://www.instagram.com/";
 
       const checklistItems = [
-        { label: "腸活によさそうなものを、複数同時に試している", type: "A" },
-        { label: "何が合っていて、何が負担なのか分からなくなる", type: "A" },
-        { label: "新しい方法を見つけると、今のやり方に足したくなる", type: "A" },
-        { label: "やっていることが多く、体感の変化を追いにくい", type: "A" },
-        { label: "発酵食品や食物繊維でお腹が張ることがある", type: "B" },
-        { label: "夕方になると、お腹の張りやガスが気になりやすい", type: "B" },
-        { label: "体にいい食材でも、量が増えると不快感が出る", type: "B" },
-        { label: "お腹がゴロゴロして、落ち着かない日がある", type: "B" },
-        { label: "便は出ているのに、軽くなった感じが少ない", type: "C" },
-        { label: "トイレ後も、まだ残っている感じがある", type: "C" },
-        { label: "便の形や切れが安定しにくい", type: "C" },
-        { label: "回数はあっても、整った感じがしにくい", type: "C" },
         { label: "食後30分から2時間くらいに眠気が出やすい", type: "D" },
+        { label: "腸活によさそうなものを、複数同時に試している", type: "A" },
+        { label: "便は出ているのに、軽くなった感じが少ない", type: "C" },
+        { label: "発酵食品や食物繊維でお腹が張ることがある", type: "B" },
+        { label: "何が合っていて、何が負担なのか分からなくなる", type: "A" },
+        { label: "夕方になると、お腹の張りやガスが気になりやすい", type: "B" },
         { label: "食後に胃腸が重く感じることがある", type: "D" },
+        { label: "トイレ後も、まだ残っている感じがある", type: "C" },
+        { label: "体にいい食材でも、量が増えると不快感が出る", type: "B" },
+        { label: "新しい方法を見つけると、今のやり方に足したくなる", type: "A" },
+        { label: "便の形や切れが安定しにくい", type: "C" },
         { label: "食べる量や組み合わせで、食後のだるさが変わる", type: "D" },
+        { label: "お腹がゴロゴロして、落ち着かない日がある", type: "B" },
+        { label: "回数はあっても、整った感じがしにくい", type: "C" },
+        { label: "やっていることが多く、体感の変化を追いにくい", type: "A" },
         { label: "朝よりも、食後の体感の方が気になりやすい", type: "D" }
       ];
 
@@ -873,22 +835,14 @@
         }
       };
 
-      const typeLabels = {
-        A: "A：足しすぎ",
-        B: "B：張りガス",
-        C: "C：残る感じ",
-        D: "D：食後反応"
+      const reasonContent = {
+        A: "取り組みの量や判断材料が増えて、何が合っているか見えにくい状態が目立ちました。まずは新しく足す前に、今やっていることを少し整理すると体感を追いやすくなります。",
+        B: "張り、ガス、ゴロゴロ感など、お腹の中の反応に関するチェックが目立ちました。食材の良し悪しだけでなく、量やタイミングを分けて見ると整理しやすいです。",
+        C: "便通の回数よりも、出た後の軽さや残る感じにヒントが出ています。回数だけで判断せず、形・切れ・残る感じを一緒に見ていくのがよさそうです。",
+        D: "食後の眠気、だるさ、胃腸の重さに関するチェックが目立ちました。腸にいいものを選ぶ前に、食べ方や組み合わせで反応が変わるかを見るのが近道です。"
       };
 
       const typeOrder = ["A", "B", "C", "D"];
-
-      const typeMaxScores = checklistItems.reduce(
-        (scores, item) => {
-          scores[item.type] += 1;
-          return scores;
-        },
-        { A: 0, B: 0, C: 0, D: 0 }
-      );
 
       const quizForm = document.querySelector("#quizForm");
       const questionsEl = document.querySelector("#questions");
@@ -906,7 +860,7 @@
             const id = `check-${index}`;
             return `
               <label class="option" for="${id}">
-                <input id="${id}" type="checkbox" name="checkItem" value="${item.type}" data-index="${index}">
+                <input id="${id}" type="checkbox" name="checkItem" data-index="${index}">
                 <span>${item.label}</span>
               </label>
             `;
@@ -967,29 +921,41 @@
       function getStrengthMessage(maxScore, topTypes) {
         if (topTypes.length > 1) {
           return {
-            title: "複数タイプが近い状態です",
-            text: "同点のタイプがあります。点数だけで決めず、選んだ項目の中で生活に影響が大きいものから見てください。"
+            badge: "複合",
+            title: "反応がいくつか重なっています",
+            text: "今はひとつに決めきるより、生活に影響が大きい体感から順に見ていくのがよさそうです。"
           };
         }
 
         if (maxScore >= 3) {
           return {
+            badge: "強め",
             title: "傾向は強めです",
-            text: "同じタイプの項目が複数重なっています。まずはこのタイプの見直しから始めると整理しやすいです。"
+            text: "近い反応が複数重なっています。まずはこの見立てに沿って、数日だけ体感を観察してみてください。"
           };
         }
 
         if (maxScore === 2) {
           return {
+            badge: "やや",
             title: "傾向はややあります",
-            text: "同じタイプの項目が2つ重なっています。まずは数日だけ、関連する体感を観察してみてください。"
+            text: "近い反応がいくつかあります。まだ決めつけず、気になる場面を数日だけメモすると整理しやすいです。"
           };
         }
 
         return {
+          badge: "弱め",
           title: "傾向はまだ弱めです",
           text: "今回は1項目のみなので、タイプを決めつけず、その反応が続くかをまず確認してみてください。"
         };
+      }
+
+      function getReasonText(topTypes, topType) {
+        if (topTypes.length > 1) {
+          return "複数の反応が近い強さで出ています。結果名だけで判断せず、チェックした内容の中で日常への影響が大きいものから見てください。";
+        }
+
+        return reasonContent[topType];
       }
 
       function renderResult(scores, selectedItems) {
@@ -1001,10 +967,11 @@
         const strengthMessage = getStrengthMessage(maxScore, topTypes);
 
         document.querySelector("#resultTitle").textContent = `${titleNames}傾向`;
-        document.querySelector("#topScore").textContent = `${maxScore}/${typeMaxScores[topType]}`;
+        document.querySelector("#topScore").textContent = strengthMessage.badge;
         document.querySelector("#resultDescription").textContent = content.description;
         document.querySelector("#strengthTitle").textContent = strengthMessage.title;
         document.querySelector("#strengthText").textContent = strengthMessage.text;
+        document.querySelector("#reasonText").textContent = getReasonText(topTypes, topType);
 
         document.querySelector("#focusList").innerHTML = content.focus
           .map((item) => `<li>${item}</li>`)
@@ -1013,10 +980,7 @@
         document.querySelector("#selectedItems").innerHTML = selectedItems
           .map(
             (item) => `
-              <li>
-                <span class="type-chip">${item.type}</span>
-                <span>${item.label}</span>
-              </li>
+              <li>${item.label}</li>
             `
           )
           .join("");
@@ -1029,24 +993,6 @@
             return `<li>${article.title}</li>`;
           })
           .join("");
-
-        document.querySelector("#scoreRows").innerHTML = `
-          <h3 class="scores-title">タイプ別チェック数</h3>
-          ${Object.entries(scores)
-            .map(([type, score]) => {
-              const width = `${(score / typeMaxScores[type]) * 100}%`;
-              return `
-                <div class="score-row">
-                  <span>${typeLabels[type]}</span>
-                  <span class="score-track" aria-hidden="true">
-                    <span class="score-fill" style="width: ${width}"></span>
-                  </span>
-                  <strong>${score}/${typeMaxScores[type]}</strong>
-                </div>
-              `;
-            })
-            .join("")}
-        `;
 
         resultEl.classList.add("is-visible");
         resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
