@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>30秒「反応タイプチェック」 | 腸活しても変わらない人へ</title>
+    <title>30秒「体感整理チェック」 | 腸活しても変わらない人へ</title>
     <meta
       name="description"
-      content="腸活しても変わらない人のための、30秒でできる反応タイプチェック。当てはまる項目を選ぶとA〜Dの傾向がその場でわかります。"
+      content="腸活しても変わらない人のための、30秒でできる体感整理チェック。当てはまる項目を選ぶと、まず見るポイントがその場でわかります。"
     >
-    <meta property="og:title" content="30秒「反応タイプチェック」">
+    <meta property="og:title" content="30秒「体感整理チェック」">
     <meta
       property="og:description"
-      content="腸活しても変わらない人のための、当てはまる項目でわかる簡易チェック。"
+      content="腸活しても変わらない人のための、まず見るポイントがわかる簡易チェック。"
     >
     <meta property="og:type" content="website">
     <style>
@@ -622,9 +622,9 @@
       <section class="hero" aria-labelledby="page-title">
         <div>
           <span class="eyebrow">腸活しても変わらない人のための</span>
-          <h1 id="page-title">30秒「反応タイプチェック」</h1>
+          <h1 id="page-title">30秒「体感整理チェック」</h1>
           <p class="lead">
-            ここ2週間で当てはまる項目を選ぶだけで、今の体感がどの反応タイプに近いかをその場で確認できます。
+            ここ2週間で当てはまる項目を選ぶだけで、今の体感でまず見るポイントをその場で確認できます。
           </p>
         </div>
         <div class="hero-visual" aria-hidden="true">
@@ -662,26 +662,26 @@
         </div>
       </section>
 
-      <section class="intro-grid" aria-label="診断タイプ一覧">
+      <section class="intro-grid" aria-label="見直しポイント一覧">
         <div class="type-pill">
-          <strong>足しすぎタイプ</strong>
+          <strong>足しすぎの整理</strong>
           <span>よいものを足しているのに、体感が重くなりやすい傾向。</span>
         </div>
         <div class="type-pill">
-          <strong>張り・ガスタイプ</strong>
+          <strong>張り・ガスの反応</strong>
           <span>発酵食品や食物繊維で、お腹の張りが気になりやすい傾向。</span>
         </div>
         <div class="type-pill">
-          <strong>便は出るけどスッキリしないタイプ</strong>
+          <strong>出た後のスッキリ感</strong>
           <span>回数はあっても、残る感じやリズムの乱れが出やすい傾向。</span>
         </div>
         <div class="type-pill">
-          <strong>食後反応タイプ</strong>
+          <strong>食後の反応</strong>
           <span>食後の眠気、だるさ、胃腸の重さに反応が出やすい傾向。</span>
         </div>
       </section>
 
-      <section class="checker" aria-label="反応タイプチェック">
+      <section class="checker" aria-label="体感整理チェック">
         <div class="progress-wrap">
           <div class="progress-meta">
             <span id="progressText">0 個選択済み</span>
@@ -705,21 +705,21 @@
       <section class="result" id="result" aria-live="polite" aria-labelledby="resultTitle">
         <div class="result-head">
           <div>
-            <p class="result-label">今いちばん近い反応</p>
-            <h2 class="result-title" id="resultTitle">〇〇タイプ傾向</h2>
+            <p class="result-label">今回の結果</p>
+            <h2 class="result-title" id="resultTitle">まず見るポイント</h2>
           </div>
           <div class="result-score">
             <strong id="topScore">弱め</strong>
-            <span>傾向</span>
+            <span>目安</span>
           </div>
         </div>
         <div class="result-body">
           <div class="result-main">
-            <h3 class="section-title">タイプ説明</h3>
+            <h3 class="section-title">結果の読み方</h3>
             <p class="result-text" id="resultDescription"></p>
 
             <div class="insight-box" id="strengthBox">
-              <span class="insight-label">傾向の強さ</span>
+              <span class="insight-label">見立ての強さ</span>
               <strong id="strengthTitle"></strong>
               <p id="strengthText"></p>
             </div>
@@ -778,9 +778,9 @@
 
       const resultContent = {
         A: {
-          name: "足しすぎタイプ",
+          name: "足しすぎの整理",
           description:
-            "よいものを足すほど、何が効いていて何が負担なのか見えにくくなりやすい傾向です。まずは増やすより、今やっている腸活を少し整理するところから見ていきます。",
+            "よいものを足すほど、何が効いていて何が負担なのか見えにくくなりやすい状態です。まずは増やすより、今やっている腸活を少し整理するところから見ていきます。",
           focus: [
             "毎日続けている発酵食品、サプリ、食物繊維を一度書き出す",
             "同時に足す数を減らし、体感を1つずつ見る",
@@ -792,7 +792,7 @@
           ]
         },
         B: {
-          name: "張り・ガスタイプ",
+          name: "張り・ガスの反応",
           description:
             "発酵食品や食物繊維が合わないのではなく、量・種類・タイミングで張りやすくなっている可能性があります。まずは張る条件を分けて見るのが近道です。",
           focus: [
@@ -806,9 +806,9 @@
           ]
         },
         C: {
-          name: "便は出るけどスッキリしないタイプ",
+          name: "出た後のスッキリ感",
           description:
-            "回数だけを見ると問題がなさそうでも、便の形・切れ・残る感じにヒントが出ている傾向です。出ているかどうかだけでなく、出たあとの体感を見ます。",
+            "回数だけを見ると問題がなさそうでも、便の形・切れ・残る感じにヒントが出ています。出ているかどうかだけでなく、出たあとの体感を見ます。",
           focus: [
             "回数より、形・切れ・残る感じを確認する",
             "朝だけでなく、日中の腹部の軽さを見る",
@@ -820,9 +820,9 @@
           ]
         },
         D: {
-          name: "食後反応タイプ",
+          name: "食後の反応",
           description:
-            "食後の眠気、だるさ、胃腸の重さに反応が出やすい傾向です。腸にいいものを選ぶ前に、食べ方・組み合わせ・時間帯で変化するかを見ます。",
+            "食後の眠気、だるさ、胃腸の重さに反応が出やすい状態です。腸にいいものを選ぶ前に、食べ方・組み合わせ・時間帯で変化するかを見ます。",
           focus: [
             "食後30分から2時間の眠気、だるさ、重さを見る",
             "一度に食べる量と、炭水化物・脂質の組み合わせを確認する",
@@ -930,7 +930,7 @@
         if (maxScore >= 3) {
           return {
             badge: "強め",
-            title: "傾向は強めです",
+            title: "見立ては強めです",
             text: "近い反応が複数重なっています。まずはこの見立てに沿って、数日だけ体感を観察してみてください。"
           };
         }
@@ -938,15 +938,15 @@
         if (maxScore === 2) {
           return {
             badge: "やや",
-            title: "傾向はややあります",
+            title: "見立てはややあります",
             text: "近い反応がいくつかあります。まだ決めつけず、気になる場面を数日だけメモすると整理しやすいです。"
           };
         }
 
         return {
           badge: "弱め",
-          title: "傾向はまだ弱めです",
-          text: "今回は1項目のみなので、タイプを決めつけず、その反応が続くかをまず確認してみてください。"
+          title: "見立てはまだ弱めです",
+          text: "今回は1項目のみなので、結果を決めつけず、その反応が続くかをまず確認してみてください。"
         };
       }
 
@@ -964,9 +964,13 @@
         const content = resultContent[topType];
         const maxScore = scores[topType];
         const titleNames = topTypes.map((type) => resultContent[type].name).join("・");
+        const resultTitle =
+          topTypes.length > 1
+            ? "まず見るポイントが複数あります"
+            : `まず見るポイントは「${titleNames}」`;
         const strengthMessage = getStrengthMessage(maxScore, topTypes);
 
-        document.querySelector("#resultTitle").textContent = `${titleNames}傾向`;
+        document.querySelector("#resultTitle").textContent = resultTitle;
         document.querySelector("#topScore").textContent = strengthMessage.badge;
         document.querySelector("#resultDescription").textContent = content.description;
         document.querySelector("#strengthTitle").textContent = strengthMessage.title;
