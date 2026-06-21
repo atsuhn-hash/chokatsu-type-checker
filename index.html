@@ -165,40 +165,27 @@
         overflow: hidden;
       }
 
-      .progress-wrap {
-        position: sticky;
-        top: 0;
-        z-index: 3;
-        border-bottom: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.94);
-        backdrop-filter: blur(10px);
-      }
-
-      .progress-meta {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 13px 16px 9px;
-        color: var(--muted);
-        font-size: 0.88rem;
-        font-weight: 700;
-      }
-
-      .progress-track {
-        width: 100%;
-        height: 6px;
-        background: #e8ebef;
-      }
-
-      .progress-bar {
-        width: 0%;
-        height: 100%;
-        background: linear-gradient(90deg, var(--green), var(--blue));
-        transition: width 180ms ease;
-      }
-
       form {
         margin: 0;
+      }
+
+      .check-guide {
+        display: grid;
+        gap: 4px;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(24, 116, 91, 0.06);
+      }
+
+      .check-guide strong {
+        color: var(--green-deep);
+        font-size: 0.95rem;
+      }
+
+      .check-guide span {
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.55;
       }
 
       .questions {
@@ -682,14 +669,9 @@
       </section>
 
       <section class="checker" aria-label="お腹と食後の見直しチェック">
-        <div class="progress-wrap">
-          <div class="progress-meta">
-            <span id="progressText">0 個選択済み</span>
-            <span>30秒チェック</span>
-          </div>
-          <div class="progress-track" aria-hidden="true">
-            <div class="progress-bar" id="progressBar"></div>
-          </div>
+        <div class="check-guide">
+          <strong>当てはまるものだけでOK</strong>
+          <span>迷うものは選ばなくて大丈夫です。今の自分に近いものだけ選んでください。</span>
         </div>
 
         <form id="quizForm">
@@ -848,8 +830,6 @@
       const questionsEl = document.querySelector("#questions");
       const resultEl = document.querySelector("#result");
       const errorText = document.querySelector("#errorText");
-      const progressText = document.querySelector("#progressText");
-      const progressBar = document.querySelector("#progressBar");
       const resetButton = document.querySelector("#resetButton");
 
       document.querySelector("#instagramLink").href = instagramUrl;
@@ -877,22 +857,14 @@
         `;
       }
 
-      function getAnswers() {
-        return getSelectedItems().map((item) => item.type);
-      }
-
       function getSelectedItems() {
         return Array.from(quizForm.querySelectorAll('input[name="checkItem"]:checked')).map(
           (input) => checklistItems[Number(input.dataset.index)]
         );
       }
 
-      function updateProgress() {
-        const selected = getAnswers().length;
-        const total = checklistItems.length;
-        progressText.textContent = `${selected} / ${total} 個選択済み`;
-        progressBar.style.width = `${(selected / total) * 100}%`;
-        if (selected > 0) {
+      function hideErrorWhenSelected() {
+        if (getSelectedItems().length > 0) {
           errorText.classList.remove("is-visible");
         }
       }
@@ -1002,7 +974,7 @@
         resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
-      quizForm.addEventListener("change", updateProgress);
+      quizForm.addEventListener("change", hideErrorWhenSelected);
 
       quizForm.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -1022,12 +994,10 @@
         quizForm.reset();
         resultEl.classList.remove("is-visible");
         errorText.classList.remove("is-visible");
-        updateProgress();
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
 
       renderQuestions();
-      updateProgress();
     </script>
   </body>
 </html>
