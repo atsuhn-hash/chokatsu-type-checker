@@ -6,12 +6,12 @@
     <title>30秒「反応タイプチェック」 | 腸活しても変わらない人へ</title>
     <meta
       name="description"
-      content="腸活しても変わらない人のための、30秒でできる反応タイプチェック。10問に答えるとA〜Dの傾向がその場でわかります。"
+      content="腸活しても変わらない人のための、30秒でできる反応タイプチェック。当てはまる項目を選ぶとA〜Dの傾向がその場でわかります。"
     >
     <meta property="og:title" content="30秒「反応タイプチェック」">
     <meta
       property="og:description"
-      content="腸活しても変わらない人のための、10問でわかる簡易チェック。"
+      content="腸活しても変わらない人のための、当てはまる項目でわかる簡易チェック。"
     >
     <meta property="og:type" content="website">
     <style>
@@ -588,7 +588,7 @@
           <span class="eyebrow">腸活しても変わらない人のための</span>
           <h1 id="page-title">30秒「反応タイプチェック」</h1>
           <p class="lead">
-            10問に答えるだけで、今の体感がどの反応タイプに近いかをその場で確認できます。
+            ここ2週間で当てはまる項目を選ぶだけで、今の体感がどの反応タイプに近いかをその場で確認できます。
           </p>
         </div>
         <div class="hero-visual" aria-hidden="true">
@@ -648,7 +648,7 @@
       <section class="checker" aria-label="反応タイプチェック">
         <div class="progress-wrap">
           <div class="progress-meta">
-            <span id="progressText">0 / 10 回答済み</span>
+            <span id="progressText">0 個選択済み</span>
             <span>30秒チェック</span>
           </div>
           <div class="progress-track" aria-hidden="true">
@@ -661,7 +661,7 @@
           <div class="actions">
             <button class="button button-primary" type="submit">結果を見る</button>
             <button class="button button-secondary" type="button" id="resetButton">やり直す</button>
-            <p class="error" id="errorText" aria-live="polite">未回答の質問があります。</p>
+            <p class="error" id="errorText" aria-live="polite">当てはまる項目を1つ以上選んでください。</p>
           </div>
         </form>
       </section>
@@ -709,97 +709,23 @@
     <script>
       const instagramUrl = "https://www.instagram.com/";
 
-      const questions = [
-        {
-          text: "腸活をしていて、今いちばん気になっていることは？",
-          options: [
-            { label: "色々試していて、何を続けるべきか分からない", type: "A" },
-            { label: "お腹の張りやガスが気になりやすい", type: "B" },
-            { label: "便は出るのに、スッキリ感が少ない", type: "C" },
-            { label: "食後の眠気、重さ、だるさが気になる", type: "D" }
-          ]
-        },
-        {
-          text: "「体にいい食材」を増やした後、起きやすいことは？",
-          options: [
-            { label: "何が合っているのか分からなくなる", type: "A" },
-            { label: "お腹がふくらむ感じが出やすい", type: "B" },
-            { label: "出てはいるのに残る感じがある", type: "C" },
-            { label: "食後にだるさや眠気が出やすい", type: "D" }
-          ]
-        },
-        {
-          text: "朝の体感で、最近いちばん近いものは？",
-          options: [
-            { label: "昨日何を試したか、少し曖昧になっている", type: "A" },
-            { label: "起きた時点でお腹が重い・張ることがある", type: "B" },
-            { label: "トイレに行っても軽くなりきらない", type: "C" },
-            { label: "前日の食事の重さが残っている", type: "D" }
-          ]
-        },
-        {
-          text: "野菜・海藻・豆類などを増やしたとき、近い反応は？",
-          options: [
-            { label: "量や種類が増えて、続け方が複雑になる", type: "A" },
-            { label: "お腹の張りやゴロゴロ感が気になる", type: "B" },
-            { label: "便の形や切れが思ったほど整わない", type: "C" },
-            { label: "食後に胃腸が重く感じることがある", type: "D" }
-          ]
-        },
-        {
-          text: "ヨーグルト・納豆・味噌などを意識したとき、近いものは？",
-          options: [
-            { label: "いくつか重ねて、反応の違いが見えにくい", type: "A" },
-            { label: "合う日と張る日があり、読みにくい", type: "B" },
-            { label: "便通はあっても、すっきり感は安定しない", type: "C" },
-            { label: "食後の重さや眠気の方が気になる", type: "D" }
-          ]
-        },
-        {
-          text: "腸活が続きにくい理由として、近いものは？",
-          options: [
-            { label: "試すことが増えて、何を残すか迷う", type: "A" },
-            { label: "よさそうな食べ方でも不快感が出る", type: "B" },
-            { label: "便通があっても納得できる変化が少ない", type: "C" },
-            { label: "食後の反応に左右されて続けにくい", type: "D" }
-          ]
-        },
-        {
-          text: "食事の量や組み合わせを変えたとき、見えやすい反応は？",
-          options: [
-            { label: "調整より先に、別の方法を試したくなる", type: "A" },
-            { label: "少し多いだけでお腹が張りやすい", type: "B" },
-            { label: "量を変えても残る感じが変わりにくい", type: "C" },
-            { label: "組み合わせ次第で食後の重さが変わる", type: "D" }
-          ]
-        },
-        {
-          text: "1日の中で、いちばん気になりやすいタイミングは？",
-          options: [
-            { label: "何を食べた・試したか振り返るとき", type: "A" },
-            { label: "午後から夕方にかけてお腹が気になるとき", type: "B" },
-            { label: "トイレの後に軽さを確認するとき", type: "C" },
-            { label: "食後30分から2時間くらい", type: "D" }
-          ]
-        },
-        {
-          text: "「腸活しているのに変わらない」と感じる理由に近いものは？",
-          options: [
-            { label: "やっていることが多く、判断しにくい", type: "A" },
-            { label: "お腹の張りで、いい変化より不快感が目立つ", type: "B" },
-            { label: "回数はあっても、整った感じが少ない", type: "C" },
-            { label: "食後の眠気やだるさが残りやすい", type: "D" }
-          ]
-        },
-        {
-          text: "まず1つだけ見るなら、どこから確認したいですか？",
-          options: [
-            { label: "今やっていることを減らして整理する", type: "A" },
-            { label: "張りやすい量・食材・時間帯を分ける", type: "B" },
-            { label: "便の形、切れ、残る感じを見る", type: "C" },
-            { label: "食後の眠気、重さ、だるさを見る", type: "D" }
-          ]
-        }
+      const checklistItems = [
+        { label: "腸活によさそうなものを、複数同時に試している", type: "A" },
+        { label: "何が合っていて、何が負担なのか分からなくなる", type: "A" },
+        { label: "新しい方法を見つけると、今のやり方に足したくなる", type: "A" },
+        { label: "やっていることが多く、体感の変化を追いにくい", type: "A" },
+        { label: "発酵食品や食物繊維でお腹が張ることがある", type: "B" },
+        { label: "夕方になると、お腹の張りやガスが気になりやすい", type: "B" },
+        { label: "体にいい食材でも、量が増えると不快感が出る", type: "B" },
+        { label: "お腹がゴロゴロして、落ち着かない日がある", type: "B" },
+        { label: "便は出ているのに、軽くなった感じが少ない", type: "C" },
+        { label: "トイレ後も、まだ残っている感じがある", type: "C" },
+        { label: "便の形や切れが安定しにくい", type: "C" },
+        { label: "回数はあっても、整った感じがしにくい", type: "C" },
+        { label: "食後30分から2時間くらいに眠気が出やすい", type: "D" },
+        { label: "食後に胃腸が重く感じることがある", type: "D" },
+        { label: "食べる量や組み合わせで、食後のだるさが変わる", type: "D" },
+        { label: "朝よりも、食後の体感の方が気になりやすい", type: "D" }
       ];
 
       const resultContent = {
@@ -868,6 +794,16 @@
         D: "D：食後反応"
       };
 
+      const typeOrder = ["A", "B", "C", "D"];
+
+      const typeMaxScores = checklistItems.reduce(
+        (scores, item) => {
+          scores[item.type] += 1;
+          return scores;
+        },
+        { A: 0, B: 0, C: 0, D: 0 }
+      );
+
       const quizForm = document.querySelector("#quizForm");
       const questionsEl = document.querySelector("#questions");
       const resultEl = document.querySelector("#result");
@@ -879,46 +815,40 @@
       document.querySelector("#instagramLink").href = instagramUrl;
 
       function renderQuestions() {
-        questionsEl.innerHTML = questions
-          .map((question, index) => {
-            const optionHtml = question.options
-              .map((option, optionIndex) => {
-                const id = `q${index}-${optionIndex}`;
-                return `
-                  <label class="option" for="${id}">
-                    <input id="${id}" type="radio" name="q${index}" value="${option.type}">
-                    <span>${option.label}</span>
-                  </label>
-                `;
-              })
-              .join("");
-
+        const optionHtml = checklistItems
+          .map((item, index) => {
+            const id = `check-${index}`;
             return `
-              <fieldset class="question">
-                <legend class="question-title">
-                  <span class="q-number">${index + 1}</span>
-                  <span>${question.text}</span>
-                </legend>
-                <div class="options">${optionHtml}</div>
-              </fieldset>
+              <label class="option" for="${id}">
+                <input id="${id}" type="checkbox" name="checkItem" value="${item.type}">
+                <span>${item.label}</span>
+              </label>
             `;
           })
           .join("");
+
+        questionsEl.innerHTML = `
+          <fieldset class="question">
+            <legend class="question-title">
+              <span>ここ2週間で当てはまるものを選んでください</span>
+            </legend>
+            <div class="options">${optionHtml}</div>
+          </fieldset>
+        `;
       }
 
       function getAnswers() {
-        return questions.map((_, index) => {
-          const selected = quizForm.querySelector(`input[name="q${index}"]:checked`);
-          return selected ? selected.value : null;
-        });
+        return Array.from(quizForm.querySelectorAll('input[name="checkItem"]:checked')).map(
+          (input) => input.value
+        );
       }
 
       function updateProgress() {
-        const answered = getAnswers().filter(Boolean).length;
-        const total = questions.length;
-        progressText.textContent = `${answered} / ${total} 回答済み`;
-        progressBar.style.width = `${(answered / total) * 100}%`;
-        if (answered === total) {
+        const selected = getAnswers().length;
+        const total = checklistItems.length;
+        progressText.textContent = `${selected} / ${total} 個選択済み`;
+        progressBar.style.width = `${(selected / total) * 100}%`;
+        if (selected > 0) {
           errorText.classList.remove("is-visible");
         }
       }
@@ -936,23 +866,28 @@
       }
 
       function findTopType(scores) {
-        return Object.entries(scores).sort((a, b) => {
-          if (b[1] !== a[1]) {
-            return b[1] - a[1];
-          }
-          return ["A", "B", "C", "D"].indexOf(a[0]) - ["A", "B", "C", "D"].indexOf(b[0]);
-        })[0][0];
+        return findTopTypes(scores)[0];
+      }
+
+      function findTopTypes(scores) {
+        const maxScore = Math.max(...Object.values(scores));
+        return typeOrder.filter((type) => scores[type] === maxScore);
       }
 
       function renderResult(scores) {
+        const topTypes = findTopTypes(scores);
         const topType = findTopType(scores);
         const content = resultContent[topType];
         const maxScore = scores[topType];
-        const maxPossible = questions.length;
+        const titleNames = topTypes.map((type) => resultContent[type].name).join("・");
+        const tieNote =
+          topTypes.length > 1
+            ? " 同じ点数のタイプもあるため、まずは強く心当たりがある項目から見てください。"
+            : "";
 
-        document.querySelector("#resultTitle").textContent = `${content.name}傾向です`;
+        document.querySelector("#resultTitle").textContent = `${titleNames}傾向です`;
         document.querySelector("#topScore").textContent = maxScore;
-        document.querySelector("#resultDescription").textContent = content.description;
+        document.querySelector("#resultDescription").textContent = content.description + tieNote;
 
         document.querySelector("#focusList").innerHTML = content.focus
           .map((item) => `<li>${item}</li>`)
@@ -969,7 +904,7 @@
 
         document.querySelector("#scoreRows").innerHTML = Object.entries(scores)
           .map(([type, score]) => {
-            const width = `${(score / maxPossible) * 100}%`;
+            const width = `${(score / typeMaxScores[type]) * 100}%`;
             return `
               <div class="score-row">
                 <span>${typeLabels[type]}</span>
@@ -992,11 +927,9 @@
         event.preventDefault();
         const answers = getAnswers();
 
-        if (answers.some((answer) => answer === null)) {
+        if (answers.length === 0) {
           errorText.classList.add("is-visible");
-          const firstMissingIndex = answers.findIndex((answer) => answer === null);
-          const firstMissing = quizForm.querySelector(`input[name="q${firstMissingIndex}"]`);
-          firstMissing.focus();
+          quizForm.querySelector('input[name="checkItem"]').focus();
           return;
         }
 
